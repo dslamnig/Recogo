@@ -165,8 +165,8 @@ open class Prefs(context: Context, prefsName: String)
             try {
                 val a = JSONArray(json)
                 for (i in 0 until a.length()) {
-                    val `val` = a.optInt(i)
-                    values.add(`val`)
+                    val value = a.optInt(i)
+                    values.add(value)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -196,8 +196,8 @@ open class Prefs(context: Context, prefsName: String)
             try {
                 val a = JSONArray(json)
                 for (i in 0 until a.length()) {
-                    val `val` = a.optString(i, null)
-                    if (`val` != null) values.add(`val`)
+                    val value = a.optString(i, null)
+                    if (value != null) values.add(value)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()

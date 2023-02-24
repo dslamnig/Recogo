@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import com.google.mlkit.vision.text.Text
 import com.slamnig.recog.graph.Vector2
-import com.slamnig.recog.util.Aspect
+import com.slamnig.recog.graph.Aspect
 
 private val LOGTAG = "DrawText.kt"
 

@@ -15,7 +15,7 @@ limitations under the License.
 package com.slamnig.recog.activity
 */
 
-package com.slamnig.recog.util
+package com.slamnig.recog.graph
 
 import android.graphics.PointF
 import androidx.compose.ui.geometry.MutableRect

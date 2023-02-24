@@ -19,14 +19,13 @@ package com.slamnig.recog.compose
 
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.util.Log
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.slamnig.recog.util.Aspect
+import com.slamnig.recog.graph.Aspect
 import kotlin.math.ceil
 
 private val LOGTAG = "DrawBarcodes.kt"

@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import com.google.mlkit.vision.objects.DetectedObject
-import com.slamnig.recog.util.Aspect
+import com.slamnig.recog.graph.Aspect
 
 private val LOGTAG = "DrawObjects.kt"
 

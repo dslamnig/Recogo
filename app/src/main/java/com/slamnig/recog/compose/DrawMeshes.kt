@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.google.mlkit.vision.common.PointF3D
 import com.google.mlkit.vision.facemesh.FaceMesh
-import com.slamnig.recog.util.Aspect
+import com.slamnig.recog.graph.Aspect
 
 /**
  * Face mesh recognition overlay.
