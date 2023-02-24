@@ -1,3 +1,20 @@
+/*
+Copyright 2023. Davor Slamnig
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+package com.slamnig.recog.activity
+*/
+
 package com.slamnig.recog.compose
 
 import android.graphics.Typeface
@@ -29,16 +46,15 @@ private val paintBg = Paint().asFrameworkPaint().apply {
     alpha = 128
 }
 
+/**
+ * Object detection/tracking graphic overlay.
+ */
 fun DrawScope.drawObjects(
     objects: List<DetectedObject>,
     sourceSize: Size,
     flip: Boolean
 ) {
-    val a = Aspect(
-        sourceSize,
-        size,
-        flip
-    )
+    val a = Aspect(sourceSize, size, flip)
 
     for(obj in objects){
         drawObject(obj, a)
@@ -64,8 +80,7 @@ private fun DrawScope.drawObject(
 
 private fun DrawScope.drawBox(
     box: Rect
-)
-{
+){
     drawRect(
         color = Color.Cyan,
         style = Stroke(width = 2.dp.toPx()),

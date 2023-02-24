@@ -1,3 +1,20 @@
+/*
+Copyright 2023. Davor Slamnig
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+package com.slamnig.recog.activity
+*/
+
 package com.slamnig.recog.dialog.fragment
 
 import android.app.Dialog
@@ -16,6 +33,9 @@ import com.slamnig.recog.dialog.data.DialogData
 import com.slamnig.recog.dialog.listener.DialogListener
 import com.slamnig.recog.dialog.viewmodel.DialogViewModel
 
+/**
+ * Base dialog fragment class hosting a Composable view.
+ */
 open class DialogBox(
     val viewModel: DialogViewModel,
 ) : DialogFragment()
@@ -48,10 +68,8 @@ open class DialogBox(
 
     override fun onCreateDialog(savedInstanceState: Bundle?) : Dialog
     {
-        Log.d(LOGTAG, "onCreateDialog()")
-
         // store dialog ref to get lifecycle owner in onStart(),
-        // because onCreateView is never called:
+        // because onCreateView() is never called:
         dialogView = createComposeView(viewModel)
 
         val dlg = Dialog(requireContext()).apply {
@@ -63,7 +81,7 @@ open class DialogBox(
             try {
                 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             } catch (e: Exception) {
-                Log.d(LOGTAG, "onCreateDialog()", e)
+                Log.w(LOGTAG, "onCreateDialog()", e)
             }
         }
 
@@ -73,13 +91,11 @@ open class DialogBox(
     override fun onStart()
     {
         super.onStart()
-        //Log.d(LOGTAG, "onStart()")
 
         // get lifecycle owner here, from dialog, and start observing
         // show state - because onCreateView() is never called:
         dialogView?.apply{
             findViewTreeLifecycleOwner()?.let { owner ->
-                Log.d(LOGTAG, "onStart() - LcOwner found")
                 viewModel.show.observe(owner, showObserver)
             }
         }
@@ -87,7 +103,6 @@ open class DialogBox(
 
     override fun onCancel(dialog: DialogInterface)
     {
-        //Log.d(LOGTAG, "onCancel()")
         viewModel.onDialogCancel()
         super.onCancel(dialog)
     }

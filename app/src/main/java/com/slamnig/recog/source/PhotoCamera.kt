@@ -1,3 +1,20 @@
+/*
+Copyright 2023. Davor Slamnig
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+package com.slamnig.recog.activity
+*/
+
 package com.slamnig.recog.source
 
 import android.graphics.Bitmap
@@ -14,6 +31,9 @@ import com.slamnig.recog.util.Utils
 import kotlinx.coroutines.*
 import java.io.File
 
+/**
+ * Device photo camera.
+ */
 class PhotoCamera(
     val activity: FragmentActivity,
     val listener: PhotoCameraListener
@@ -31,8 +51,7 @@ class PhotoCamera(
 
     fun takePhoto()
     {
-        Log.d(LOGTAG, "takePhoto()")
-        mTakePicture.launch(imageUri)
+        takePicture.launch(imageUri)
     }
 
     private fun initImageFile(): File{
@@ -69,10 +88,8 @@ class PhotoCamera(
         }
     }
 
-    private val mTakePicture = activity.registerForActivityResult(ActivityResultContracts.TakePicture())
+    private val takePicture = activity.registerForActivityResult(ActivityResultContracts.TakePicture())
     { result -> // Boolean
-        Log.i(LOGTAG, "Activity result for camera:$result")
-
         result?.let {
             if(it == true){
                scope.launch{

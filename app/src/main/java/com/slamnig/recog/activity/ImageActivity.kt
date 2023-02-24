@@ -1,3 +1,20 @@
+/*
+Copyright 2023. Davor Slamnig
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+package com.slamnig.recog.activity
+*/
+
 package com.slamnig.recog.activity
 
 import android.graphics.Bitmap
@@ -19,6 +36,9 @@ import com.slamnig.recog.source.PhotoCamera
 import com.slamnig.recog.util.Utils
 import com.slamnig.recog.viewmodel.ImageRecogViewModel
 
+/**
+ * Still image recognition.
+ */
 class ImageActivity : FragmentActivity()
 {
     private val LOGTAG = this.javaClass.simpleName
@@ -70,17 +90,12 @@ class ImageActivity : FragmentActivity()
             openSelectBox()
         }
 
-        Log.i(LOGTAG, "onCreate")
-
         setContent{
             ImageRecogView(viewModel)
         }
 
-        Utils.fullScreen(
-            this,
-            setNavigationBarColor = true,
-            navigationBarColor = android.graphics.Color.BLACK
-        )
+        Utils.fullScreen(this, setNavigationBarColor = true,
+            navigationBarColor = android.graphics.Color.BLACK)
 
         Utils.keepScreenOn(this, true)
     }
@@ -115,7 +130,6 @@ class ImageActivity : FragmentActivity()
 
     override fun onDestroy()
     {
-        Log.d(LOGTAG, "onDestroy")
         recog.close()
         super.onDestroy()
     }
@@ -125,6 +139,7 @@ class ImageActivity : FragmentActivity()
         recog.recognize(Utils.maxPixelBitmap(bitmap, 1024 * 1024))
     }
 
+    // Select recognition mode:
     private fun openSelectBox()
     {
         selectBox.show(
@@ -136,7 +151,6 @@ class ImageActivity : FragmentActivity()
             ),
             listener = object: SelectListener {
                 override fun onSelect(mode: Int) {
-                    Log.d(LOGTAG, "openSelectBox() - onSelect(): $mode")
                     prefs.setRecogMode(mode)
                     recog.rescan(mode)
                 }
