@@ -20,6 +20,8 @@ package com.slamnig.recog.compose
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,9 +29,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -51,6 +55,8 @@ fun ImageRecogView(viewModel: ImageRecogViewModel)
     val recogState = viewModel.recogState.observeAsState(initial = RecogState())
     var sliderPosition = viewModel.alphaSliderPosition.observeAsState(0.5f).value
 
+    val gestureModifier = gestureTransformModifier()
+
     RecogoTheme {
         Surface(
             color = Color.Black
@@ -70,19 +76,17 @@ fun ImageRecogView(viewModel: ImageRecogViewModel)
                             bitmap.value?.let { bitmap ->
                                 // photo:
                                 Image(
+                                    modifier = gestureModifier,
                                     bitmap = bitmap.asImageBitmap(),
                                     contentScale = ContentScale.Fit,
-                                    contentDescription = stringResource(R.string.photo),
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .alpha(((1f - sliderPosition) * 2f).coerceAtLeast(0f))
+                                    contentDescription = stringResource(R.string.photo)
                                 )
 
                                 // recognition graphics:
                                 Canvas(
-                                    modifier = Modifier
-                                        .fillMaxSize()
+                                    modifier = gestureModifier
                                         .alpha(((sliderPosition) * 2f).coerceAtMost(1f)),
+
                                     onDraw = {
                                         val sourceSize =
                                             Size(bitmap.width.toFloat(), bitmap.height.toFloat())

@@ -23,12 +23,19 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -57,6 +64,8 @@ fun LiveRecogView(
     val showCameraSwitch = viewModel.showCameraSwitch.observeAsState(false)
     var sliderPosition = viewModel.alphaSliderPosition.observeAsState(0.5f).value
 
+    val gestureModifier = gestureTransformModifier()
+
     RecogoTheme {
         Surface(
             color = Color.Black
@@ -70,8 +79,7 @@ fun LiveRecogView(
                     ) {
                         // camera preview:
                         AndroidView(
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = gestureModifier,
                             factory = {
                                 previewView
                             }
@@ -93,8 +101,7 @@ fun LiveRecogView(
 
                         // recognition graphics:
                         Canvas(
-                            modifier = Modifier
-                                .fillMaxSize()
+                            modifier = gestureModifier
                                 .alpha(((sliderPosition) * 2f).coerceAtMost(1f)),
                             onDraw = {
                                 recogState.value?.text?.let { text ->
