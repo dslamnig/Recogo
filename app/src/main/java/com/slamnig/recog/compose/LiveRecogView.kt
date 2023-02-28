@@ -23,19 +23,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -104,25 +97,30 @@ fun LiveRecogView(
                             modifier = gestureModifier
                                 .alpha(((sliderPosition) * 2f).coerceAtMost(1f)),
                             onDraw = {
+                                drawRecogState(recogState.value, previewSize, cameraFacing == FRONT_CAMERA)
+                                /*
+                                val flip = cameraFacing == FRONT_CAMERA
+
                                 recogState.value?.text?.let { text ->
-                                    drawText(text, previewSize)
+                                    drawText(text, previewSize, flip)
                                 }
 
                                 recogState.value?.barcodes?.let { barcodes ->
-                                    drawBarcodes(barcodes, previewSize)
+                                    drawBarcodes(barcodes, previewSize, flip)
                                 }
 
                                 recogState.value?.faces?.let { faces ->
-                                    drawFaces(faces, previewSize, cameraFacing == FRONT_CAMERA)
+                                    drawFaces(faces, previewSize, flip)
                                 }
 
                                 recogState.value?.objects?.let { objects ->
-                                    drawObjects(objects, previewSize, cameraFacing == FRONT_CAMERA)
+                                    drawObjects(objects, previewSize, flip)
                                 }
 
                                 recogState.value?.meshes?.let { meshes ->
-                                    drawMeshes(meshes, previewSize, cameraFacing == FRONT_CAMERA)
+                                    drawMeshes(meshes, previewSize, flip)
                                 }
+                                 */
                             }
                         )
 

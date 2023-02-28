@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.compose
@@ -55,16 +54,19 @@ private val paintBg = Paint().asFrameworkPaint().apply {
  */
 fun DrawScope.drawBarcodes(
     barcodes: List<Barcode>,
-    sourceSize: Size
+    sourceSize: Size,
+    flip: Boolean
 ) {
-    val a = Aspect(sourceSize, size)
+    val a = Aspect(sourceSize, size, flip)
 
     for(barcode in barcodes){
         barcode.displayValue?.let { fullText ->
             barcode.boundingBox?.let { box ->
                 // set origin to box top :
-                val x = a.transX(box.left)
-                val y = a.transY(box.top)
+                val transBox = a.transRect(box)
+                val x = transBox.left
+                val y = transBox.top
+
                 val w = a.scale(box.width())
                 val h = a.scale(box.height())
 

@@ -24,7 +24,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.toRect
 import androidx.core.graphics.toRectF
 import com.google.mlkit.vision.common.PointF3D
-import com.google.mlkit.vision.facemesh.FaceMeshPoint
 
 /**
  * Screen coordinate transformations.
@@ -103,8 +102,11 @@ class Aspect(val sourceSize: Size, val overlaySize: Size, val flip: Boolean = fa
         )
 
         if(flip == true){
-            r.left = overlaySize.width - r.left
-            r.right = overlaySize.width - r.right
+            // flip x coordinates _and_ rectangle left <-> right
+            val left = overlaySize.width - r.left
+            val right = overlaySize.width - r.right
+            r.left = right
+            r.right = left
         }
 
         return r.toRect()
@@ -128,20 +130,6 @@ class Aspect(val sourceSize: Size, val overlaySize: Size, val flip: Boolean = fa
             tp.forEach{ point ->
                 point.x = overlaySize.width - point.x
             }
-        }
-
-        return tp
-    }
-
-    fun transPoints3d(meshpoints: List<FaceMeshPoint>): List<PointF3D>
-    {
-        val tp = meshpoints.map{ meshpoint ->
-            val point = meshpoint.position
-            val tx = point.x * scale + xoff
-            val x = if(flip == false) tx else overlaySize.width - tx
-            val y = point.y * scale + yoff
-            val z = point.z * scale
-            PointF3D.from(x, y, z)
         }
 
         return tp

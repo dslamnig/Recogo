@@ -23,7 +23,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.google.mlkit.vision.common.PointF3D
 import com.google.mlkit.vision.facemesh.FaceMesh
+import com.google.mlkit.vision.facemesh.FaceMeshPoint
 import com.slamnig.recog.graph.Aspect
+
+
+// extend Aspect to handle mesh points:
+fun Aspect.transMeshPoints(meshpoints: List<FaceMeshPoint>): List<PointF3D>
+{
+    val tp = meshpoints.map{ meshpoint ->
+        val point = meshpoint.position
+        val tx = point.x * scale + xoff
+        val x = if(flip == false) tx else overlaySize.width - tx
+        val y = point.y * scale + yoff
+        val z = point.z * scale
+        PointF3D.from(x, y, z)
+    }
+
+    return tp
+}
 
 /**
  * Face mesh recognition overlay.
@@ -44,7 +61,7 @@ fun DrawScope.drawMesh(
     a: Aspect
 ){
     for(triangle in mesh.allTriangles){
-        val points = a.transPoints3d(triangle.allPoints)
+        val points = a.transMeshPoints(triangle.allPoints)
 
         connectPoints(points[0], points[1])
         connectPoints(points[1], points[2])

@@ -95,6 +95,7 @@ fun gestureTransformModifier(): Modifier
             TransformOrigin(0f, 0f).also { transformOrigin = it }
             translationX = -off.x * zoom
             translationY = -off.y * zoom
+            // rotationX = 180f
             scaleX = zoom
             scaleY = zoom
         }

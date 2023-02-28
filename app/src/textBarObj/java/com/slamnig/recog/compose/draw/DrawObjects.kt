@@ -66,7 +66,7 @@ private fun DrawScope.drawObject(
     a: Aspect
 ){
     val box = a.transRect(obj.boundingBox)
-    val x = if(a.flip) box.right else box.left
+    val x = box.left
     val y = box.top
 
     drawBox(box)

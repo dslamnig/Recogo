@@ -11,8 +11,8 @@ android {
         applicationId "com.slamnig.recog"
         minSdk 22
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        versionCode 102
+        versionName "1.02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -21,6 +21,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -45,6 +49,36 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+    flavorDimensions "app_type"
+
+    productFlavors {
+        textBarObj {
+            dimension "app_type"
+            applicationIdSuffix ".tbo"
+            resValue("string", "app_name", "Recogo T")
+        }
+        face {
+            dimension "app_type"
+            applicationIdSuffix ".face"
+            resValue("string", "app_name", "Recogo F")
+        }
+        full {
+            dimension "app_type"
+            resValue("string", "app_name", "Recogo")
+        }
+    }
+
+    sourceSets {
+        full {
+            java.srcDirs = [
+                    'src/main/java',
+                    'src/full/java',
+                    'src/textBarObj/java/com/slamnig/recog/compose/draw',
+                    'src/face/java/com/slamnig/recog/compose/draw'
+            ]
         }
     }
 }
@@ -102,20 +136,35 @@ dependencies {
     // mlkit:
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
 
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition-common:18.0.0'
+    /*
+    // bundled mlkit detector dependencies:
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
-
     implementation 'com.google.mlkit:barcode-scanning:17.0.3'
-    // implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
-
     implementation 'com.google.mlkit:face-detection:16.1.5'
-    // implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.1.0'
+    implementation 'com.google.mlkit:object-detection:17.0.0'
+    implementation 'com.google.mlkit:face-mesh-detection:16.0.0-beta1'
+    */
+
+    // Variants - using unbundled mlkit dependencies where possible
+    // full:
+    fullImplementation 'com.google.android.gms:play-services-mlkit-text-recognition-common:18.0.0'
+    fullImplementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    fullImplementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
+    fullImplementation 'com.google.android.gms:play-services-mlkit-face-detection:17.1.0'
+    fullImplementation 'com.google.mlkit:object-detection:17.0.0'
+    fullImplementation 'com.google.mlkit:face-mesh-detection:16.0.0-beta1'
+    // text, barcode and objects:
+    textBarObjImplementation 'com.google.android.gms:play-services-mlkit-text-recognition-common:18.0.0'
+    textBarObjImplementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    textBarObjImplementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
+    textBarObjImplementation 'com.google.mlkit:object-detection:17.0.0'
+    // face and face mesh:
+    faceImplementation 'com.google.android.gms:play-services-mlkit-face-detection:17.1.0'
+    faceImplementation 'com.google.mlkit:face-mesh-detection:16.0.0-beta1'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.4.+'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.mlkit:object-detection:17.0.0'
-    implementation 'com.google.mlkit:face-mesh-detection:16.0.0-beta1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

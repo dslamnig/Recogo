@@ -45,93 +45,17 @@ import com.slamnig.recog.*
 import com.slamnig.recog.viewmodel.LiveRecogViewModel
 
 /**
- * Live camera recognizer.
+ * Live camera recognizer - full.
  */
 @Suppress("UNCHECKED_CAST")
-class LiveRecog(val viewModel: LiveRecogViewModel, val preview: PreviewView, val startFacing: Int)
+class LiveRecog(viewModel: LiveRecogViewModel, preview: PreviewView, startFacing: Int)
+    : BaseLiveRecog(viewModel = viewModel, preview = preview, startFacing = startFacing)
 {
     private val LOGTAG = this.javaClass.simpleName
 
-    private var cameraSource: CameraXSource? = null
-    private var switchCameraObserver: Observer<Unit>
-    private var mode = RECOG_TEXT
-    private var cameraFacing = startFacing
-
-    init{
-        viewModel.setCameraFacing(cameraFacing)
-
-        switchCameraObserver = Observer<Unit>(){
-            cameraFacing =
-                when(cameraFacing){
-                    BACK_CAMERA ->
-                        FRONT_CAMERA
-                    else ->
-                        BACK_CAMERA
-                }
-            viewModel.setCameraFacing(cameraFacing)
-            restart()
-        }.also{ observer ->
-            viewModel.switchCamera.observeForever(observer)
-        }
-    }
-
-    fun init(recogMode: Int)
+    override fun setRecogMode(recogMode: Int)
     {
-        stop()
-        close()
-        // if text or barcode recognition, force back camera:
-        if(recogMode == RECOG_TEXT || recogMode == RECOG_BARCODE && cameraFacing == FRONT_CAMERA) {
-            cameraFacing = BACK_CAMERA
-            viewModel.setCameraFacing(cameraFacing)
-        }
-
-        setMode(recogMode)
-    }
-
-    @SuppressLint("MissingPermission")
-    fun start()
-    {
-        cameraSource?.start()
-    }
-
-    fun stop()
-    {
-        cameraSource?.stop()
-    }
-
-    fun close()
-    {
-        cameraSource?.close()
-        cameraSource = null
-    }
-
-    fun restart()
-    {
-        init(mode)
-        start()
-    }
-
-    fun destroy()
-    {
-        stop()
-        close()
-
-        viewModel.switchCamera.removeObserver(switchCameraObserver)
-    }
-
-    private fun setMode(recogMode: Int)
-    {
-        mode = recogMode
-
-        // back camera only for text and barcode:
-        viewModel.setShowCameraSwitch(
-            when(mode){
-                RECOG_TEXT, RECOG_BARCODE ->
-                    false
-                else ->
-                    true
-            }
-        )
+        super.setRecogMode(recogMode)
 
         when (mode) {
             RECOG_TEXT ->
@@ -277,44 +201,5 @@ class LiveRecog(val viewModel: LiveRecogViewModel, val preview: PreviewView, val
                 }
             } as DetectionTaskCallback<Any>
         )
-    }
-
-    private fun setCameraSource(
-        detector: Detector<Any>,
-        callback: DetectionTaskCallback<Any>
-    ){
-        CameraSourceConfig.Builder(
-            preview.context,
-            detector,
-            callback
-        )
-            .setFacing(cameraFacing)
-            .build()
-            .let { config ->
-                cameraSource = CameraXSource(config, preview)
-            }
-    }
-
-    private fun getPreviewSize(): Size?
-    {
-        if(cameraSource == null)
-            return null
-        else {
-            val size = cameraSource!!.previewSize
-            var tsize = size
-
-            if(size != null){
-                preview.viewPort?.rotation.let { rotation ->
-                    if (rotation == 0 || rotation == 2) {
-                        // switch w/h for portrait:
-                        tsize = Size(size.height, size.width)
-                    }
-                }
-            }
-            else
-                Log.w(LOGTAG, "getPreviewSize() - size null")
-
-            return tsize
-        }
     }
 }

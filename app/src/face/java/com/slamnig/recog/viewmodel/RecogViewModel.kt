@@ -17,19 +17,29 @@ package com.slamnig.recog.activity
 
 package com.slamnig.recog.viewmodel
 
-import com.google.mlkit.vision.barcode.common.Barcode
+import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.facemesh.FaceMesh
-import com.google.mlkit.vision.objects.DetectedObject
-import com.google.mlkit.vision.text.Text
+import kotlinx.coroutines.launch
 
 /**
- * Recognition view state.
+ * Recognition view model - full.
  */
-data class RecogState(
-    val text: Text? = null,
-    val barcodes: List<Barcode>? = null,
-    val faces: List<Face>? = null,
-    val objects: List<DetectedObject>? = null,
-    val meshes: List<FaceMesh>? = null
-)
+open class RecogViewModel: BaseRecogViewModel()
+{
+    private val LOGTAG = this.javaClass.simpleName
+
+    fun setFaces(faces: List<Face>)
+    {
+        viewModelScope.launch {
+            _recogState.value = RecogState(faces = faces)
+        }
+    }
+
+    fun setMeshes(meshes: List<FaceMesh>)
+    {
+        viewModelScope.launch {
+            _recogState.value = RecogState(meshes = meshes)
+        }
+    }
+}

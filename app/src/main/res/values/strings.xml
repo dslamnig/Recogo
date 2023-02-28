@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Recogo</string>
     <string name="main_title">" - ML Kit demo"</string>
 
     <!-- recognition modes: -->

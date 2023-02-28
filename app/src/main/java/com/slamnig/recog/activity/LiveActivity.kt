@@ -115,7 +115,8 @@ class LiveActivity : FragmentActivity()
     {
         val previewView = PreviewView(this).apply {
             // preview overlay transformations expect FIT_CENTER:
-            this.scaleType = PreviewView.ScaleType.FIT_CENTER
+            scaleType = PreviewView.ScaleType.FIT_CENTER
+
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
