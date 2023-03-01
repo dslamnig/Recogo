@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.compose
@@ -25,7 +24,6 @@ import com.google.mlkit.vision.common.PointF3D
 import com.google.mlkit.vision.facemesh.FaceMesh
 import com.google.mlkit.vision.facemesh.FaceMeshPoint
 import com.slamnig.recog.graph.Aspect
-
 
 // extend Aspect to handle mesh points:
 fun Aspect.transMeshPoints(meshpoints: List<FaceMeshPoint>): List<PointF3D>

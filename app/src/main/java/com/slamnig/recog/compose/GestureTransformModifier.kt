@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.compose
@@ -59,7 +58,7 @@ fun gestureTransformModifier(): Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
             detectTransformGestures(
-                onGesture = { gestureCentroid, gesturePan, gestureZoom, gestureRotate ->
+                onGesture = { gestureCentroid, gesturePan, gestureZoom, _ ->
                     val oldScale = scale
                     val newScale = (scale * gestureZoom).coerceIn(0.5f..5f)
                     // don't animate transform:
@@ -95,7 +94,6 @@ fun gestureTransformModifier(): Modifier
             TransformOrigin(0f, 0f).also { transformOrigin = it }
             translationX = -off.x * zoom
             translationY = -off.y * zoom
-            // rotationX = 180f
             scaleX = zoom
             scaleY = zoom
         }

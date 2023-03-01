@@ -12,21 +12,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.recog
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.util.Size
 import androidx.camera.view.PreviewView
-import androidx.lifecycle.Observer
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.camera.CameraSourceConfig
-import com.google.mlkit.vision.camera.CameraXSource
 import com.google.mlkit.vision.camera.DetectionTaskCallback
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection

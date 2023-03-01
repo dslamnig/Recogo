@@ -20,7 +20,7 @@ import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.facemesh.FaceMesh
 
 /**
- * Recognition view state - full.
+ * Recognition view state - face and mesh.
  */
 data class RecogState(
     val faces: List<Face>? = null,

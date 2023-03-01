@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.compose
@@ -88,28 +87,6 @@ fun ImageRecogView(viewModel: ImageRecogViewModel)
                                             Size(bitmap.width.toFloat(), bitmap.height.toFloat())
 
                                         drawRecogState(recogState.value, sourceSize, false)
-
-                                        /*
-                                        recogState.value?.text?.let { text ->
-                                            drawText(text, sourceSize, false)
-                                        }
-
-                                        recogState.value?.barcodes?.let { barcodes ->
-                                            drawBarcodes(barcodes, sourceSize, false)
-                                        }
-
-                                        recogState.value?.faces?.let { faces ->
-                                            drawFaces(faces, sourceSize, false)
-                                        }
-
-                                        recogState.value?.objects?.let { objects ->
-                                            drawObjects(objects, sourceSize, false)
-                                        }
-
-                                        recogState.value?.meshes?.let{ meshes ->
-                                            drawMeshes(meshes, sourceSize, false)
-                                        }
-                                        */
                                     }
                                 )
                             }

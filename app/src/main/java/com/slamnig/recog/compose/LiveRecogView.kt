@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-package com.slamnig.recog.activity
 */
 
 package com.slamnig.recog.compose
@@ -98,29 +97,6 @@ fun LiveRecogView(
                                 .alpha(((sliderPosition) * 2f).coerceAtMost(1f)),
                             onDraw = {
                                 drawRecogState(recogState.value, previewSize, cameraFacing == FRONT_CAMERA)
-                                /*
-                                val flip = cameraFacing == FRONT_CAMERA
-
-                                recogState.value?.text?.let { text ->
-                                    drawText(text, previewSize, flip)
-                                }
-
-                                recogState.value?.barcodes?.let { barcodes ->
-                                    drawBarcodes(barcodes, previewSize, flip)
-                                }
-
-                                recogState.value?.faces?.let { faces ->
-                                    drawFaces(faces, previewSize, flip)
-                                }
-
-                                recogState.value?.objects?.let { objects ->
-                                    drawObjects(objects, previewSize, flip)
-                                }
-
-                                recogState.value?.meshes?.let { meshes ->
-                                    drawMeshes(meshes, previewSize, flip)
-                                }
-                                 */
                             }
                         )
 
