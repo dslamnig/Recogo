@@ -25,8 +25,4 @@ fun DrawScope.drawRecogState(state: RecogState?, previewSize: Size, flip: Boolea
     state?.faces?.let { faces ->
         drawFaces(faces, previewSize, flip)
     }
-
-    state?.meshes?.let { meshes ->
-        drawMeshes(meshes, previewSize, flip)
-    }
 }

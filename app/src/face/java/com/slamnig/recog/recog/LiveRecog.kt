@@ -23,9 +23,6 @@ import com.google.mlkit.vision.camera.DetectionTaskCallback
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.facemesh.FaceMesh
-import com.google.mlkit.vision.facemesh.FaceMeshDetection
-import com.google.mlkit.vision.facemesh.FaceMeshDetectorOptions
 import com.google.mlkit.vision.interfaces.Detector
 import com.slamnig.recog.*
 import com.slamnig.recog.viewmodel.LiveRecogViewModel
@@ -48,8 +45,6 @@ class LiveRecog(viewModel: LiveRecogViewModel, preview: PreviewView, startFacing
                 initFaceBox()
             RECOG_FACE_CONTOURS ->
                 initFaceContours()
-            RECOG_FACE_MESH ->
-                initFaceMesh()
         }
     }
 
@@ -68,7 +63,7 @@ class LiveRecog(viewModel: LiveRecogViewModel, preview: PreviewView, startFacing
     private fun initFaceContours()
     {
         val options = FaceDetectorOptions.Builder()
-            // this kills boxes, shows contour for only one face:
+            // this kills multiple boxes, shows contour for only one face:
             .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
             .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
@@ -89,27 +84,6 @@ class LiveRecog(viewModel: LiveRecogViewModel, preview: PreviewView, startFacing
                             viewModel.setPreviewSize(size)
                         }
                         viewModel.setFaces(faceList)
-                    }
-                }
-            } as DetectionTaskCallback<Any>
-        )
-    }
-
-    private fun initFaceMesh()
-    {
-        val options = FaceMeshDetectorOptions.Builder()
-            .build()
-
-        setCameraSource(
-            FaceMeshDetection.getClient(options) as Detector<Any>,
-            DetectionTaskCallback<List<FaceMesh>>() { task ->
-                task.addOnSuccessListener { list ->
-                    list?.let { meshList ->
-                        getPreviewSize()?.let{ size ->
-                            viewModel.setPreviewSize(size)
-                        }
-
-                        viewModel.setMeshes(meshList)
                     }
                 }
             } as DetectionTaskCallback<Any>

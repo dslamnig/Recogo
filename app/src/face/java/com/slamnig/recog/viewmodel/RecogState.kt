@@ -17,12 +17,10 @@ limitations under the License.
 package com.slamnig.recog.viewmodel
 
 import com.google.mlkit.vision.face.Face
-import com.google.mlkit.vision.facemesh.FaceMesh
 
 /**
  * Recognition view state - face and mesh.
  */
 data class RecogState(
     val faces: List<Face>? = null,
-    val meshes: List<FaceMesh>? = null
 )

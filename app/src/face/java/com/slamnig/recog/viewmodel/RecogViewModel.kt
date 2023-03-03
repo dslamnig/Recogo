@@ -18,7 +18,6 @@ package com.slamnig.recog.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.face.Face
-import com.google.mlkit.vision.facemesh.FaceMesh
 import kotlinx.coroutines.launch
 
 /**
@@ -32,13 +31,6 @@ open class RecogViewModel: BaseRecogViewModel()
     {
         viewModelScope.launch {
             _recogState.value = RecogState(faces = faces)
-        }
-    }
-
-    fun setMeshes(meshes: List<FaceMesh>)
-    {
-        viewModelScope.launch {
-            _recogState.value = RecogState(meshes = meshes)
         }
     }
 }

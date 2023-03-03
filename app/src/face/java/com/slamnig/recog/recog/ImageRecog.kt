@@ -16,15 +16,11 @@ limitations under the License.
 
 package com.slamnig.recog.recog
 
-import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.facemesh.FaceMeshDetection
-import com.google.mlkit.vision.facemesh.FaceMeshDetector
-import com.google.mlkit.vision.facemesh.FaceMeshDetectorOptions
 import com.google.mlkit.vision.interfaces.Detector
 import com.slamnig.recog.*
 import com.slamnig.recog.viewmodel.ImageRecogViewModel
@@ -50,8 +46,6 @@ class ImageRecog(viewModel: ImageRecogViewModel) : BaseImageRecog(viewModel = vi
                 initFaceBox()
             RECOG_FACE_CONTOURS ->
                 initFaceContours()
-            RECOG_FACE_MESH ->
-                initFaceMesh()
             else ->
                 null
         }
@@ -81,14 +75,6 @@ class ImageRecog(viewModel: ImageRecogViewModel) : BaseImageRecog(viewModel = vi
         return FaceDetection.getClient(options) as Detector<Any>
     }
 
-    private fun initFaceMesh(): Detector<Any>
-    {
-        val options = FaceMeshDetectorOptions.Builder()
-            .build()
-
-        return FaceMeshDetection.getClient(options) as Detector<Any>
-    }
-
     override fun recog(image: InputImage)
     {
         detector?.apply {
@@ -99,11 +85,6 @@ class ImageRecog(viewModel: ImageRecogViewModel) : BaseImageRecog(viewModel = vi
                             faces?.let {
                                 viewModel.setFaces(it.filterNotNull())
                             }
-                        }
-                is FaceMeshDetector ->
-                    process(image)
-                        .addOnSuccessListener { meshes ->
-                            viewModel.setMeshes(meshes)
                         }
             }
         }

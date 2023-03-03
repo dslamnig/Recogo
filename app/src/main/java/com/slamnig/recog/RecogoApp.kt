@@ -30,17 +30,15 @@ class RecogoApp : Application()
 
         // init select mode items in Constants.kt when resources context becomes available:
         RECOG_SELECT_MODE_ITEMS = when (BuildConfig.FLAVOR) {
-            "textBarObj" ->
+            "textBarcode" ->
                 listOf(
                     ItemData(RECOG_TEXT, getString(R.string.ocr)),
-                    ItemData(RECOG_BARCODE, getString(R.string.barcode)),
-                    ItemData(RECOG_OBJECT, getString(R.string.object_detection)),
+                    ItemData(RECOG_BARCODE, getString(R.string.barcode))
                 )
             "face" ->
                 listOf(
                     ItemData(RECOG_FACE_BOX, getString(R.string.face_box)),
-                    ItemData(RECOG_FACE_CONTOURS, getString(R.string.face_contours)),
-                    ItemData(RECOG_FACE_MESH, getString(R.string.face_mesh))
+                    ItemData(RECOG_FACE_CONTOURS, getString(R.string.face_contours))
                 )
             else ->
                 listOf(
