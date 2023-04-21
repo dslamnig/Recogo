@@ -30,7 +30,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
-/*
+/**
     Plug-in replacement for CameraXSource that exposes the Camera instance.
     This allows camera control (e.g. zoom).
 */

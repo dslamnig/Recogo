@@ -21,7 +21,7 @@ import android.util.Size
 import com.google.mlkit.vision.camera.DetectionTaskCallback
 import com.google.mlkit.vision.interfaces.Detector
 
-/*
+/**
     CameraSourceConfig clone for CameraXSourceX
  */
 class CameraSourceConfigX (
