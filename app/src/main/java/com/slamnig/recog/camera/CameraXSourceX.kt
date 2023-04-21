@@ -30,6 +30,10 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
+/*
+    Plug-in replacement for CameraXSource that exposes the Camera instance.
+    This allows camera control (e.g. zoom).
+*/
 class CameraXSourceX(
     val config: CameraSourceConfigX,
     val previewView: PreviewView? = null
@@ -195,8 +199,8 @@ class CameraXSourceX(
     private fun processImageProxy(imageProxy: ImageProxy)
     {
         // camera input now paused
-        imageProxy.image?.let {
-            detectorProc.process(it, imageProxy.imageInfo.rotationDegrees)
+        imageProxy.image?.let { image ->
+            detectorProc.process(image, imageProxy.imageInfo.rotationDegrees)
                 ?.addOnCompleteListener{
                     // release imageProxy to reenable camera input:
                     imageProxy.close()

@@ -22,6 +22,10 @@ import com.google.mlkit.vision.camera.DetectionTaskCallback
 import com.google.mlkit.vision.interfaces.Detector
 import java.io.IOException
 
+/*
+    Helper for CameraXSourceX, combining a ML Kit vision detector
+    and associated detection task.
+ */
 class DetectorWithProcessorX(
     val detector: Detector<Any>,
     val callback: DetectionTaskCallback<Any>
