@@ -16,7 +16,10 @@ limitations under the License.
 
 package com.slamnig.recog.recog
 
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.util.Log
 import android.util.Size
 import androidx.camera.view.PreviewView
@@ -26,6 +29,8 @@ import com.google.mlkit.vision.camera.CameraXSource
 import com.google.mlkit.vision.camera.DetectionTaskCallback
 import com.google.mlkit.vision.interfaces.Detector
 import com.slamnig.recog.*
+import com.slamnig.recog.camera.CameraSourceConfigX
+import com.slamnig.recog.camera.CameraXSourceX
 import com.slamnig.recog.viewmodel.LiveRecogViewModel
 
 /**
@@ -36,8 +41,20 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
 {
     private val LOGTAG = this.javaClass.simpleName
 
+    companion object {
+        const val CAM_SOURCE = 0
+        const val CAM_SOURCE_X = 1
+        const val camSource = CAM_SOURCE_X
+    }
+
     var cameraSource: CameraXSource? = null
+    var cameraSourceX: CameraXSourceX? = null
+
+    var zoom = 1.0f
+
     private var switchCameraObserver: Observer<Unit>
+    private var zoomObserver: Observer<Float>
+
     var mode = RECOG_TEXT
     var cameraFacing = startFacing
 
@@ -45,6 +62,7 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
         viewModel.setCameraFacing(cameraFacing)
 
         switchCameraObserver = Observer<Unit>(){
+            // toggle front/back camera:
             cameraFacing =
                 when(cameraFacing){
                     BACK_CAMERA ->
@@ -57,39 +75,66 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
         }.also{ observer ->
             viewModel.switchCamera.observeForever(observer)
         }
+
+        zoomObserver = Observer<Float>(){ gestureZoom ->
+            if(gestureZoom < 0.0f){
+                // animate to min zoom:
+                ValueAnimator.ofFloat(zoom, 1.0f).apply {
+                    duration = 200
+
+                    addUpdateListener { updatedAnimation ->
+                        zoom = updatedAnimation.animatedValue as Float
+                        applyZoom()
+                    }
+
+                    start()
+                }
+            }
+            else{
+                zoom = (zoom * gestureZoom).coerceIn(1.0f..5.0f)
+                applyZoom()
+            }
+
+            applyZoom()
+        }.also{ observer ->
+            viewModel.zoom.observeForever(observer)
+        }
     }
 
     fun init(recogMode: Int)
     {
         stop()
         close()
-
-        /*
-        // if text or barcode recognition, force back camera:
-        if(recogMode == RECOG_TEXT || recogMode == RECOG_BARCODE && cameraFacing == FRONT_CAMERA) {
-            cameraFacing = BACK_CAMERA
-            viewModel.setCameraFacing(cameraFacing)
-        }
-        */
-
         setRecogMode(recogMode)
     }
 
     @SuppressLint("MissingPermission")
     fun start()
     {
-        cameraSource?.start()
+        if(camSource == CAM_SOURCE_X)
+            cameraSourceX?.start()
+        else
+            cameraSource?.start()
     }
 
     fun stop()
     {
-        cameraSource?.stop()
+        if(camSource == CAM_SOURCE_X)
+            cameraSourceX?.stop()
+        else
+            cameraSource?.stop()
     }
 
     fun close()
     {
-        cameraSource?.close()
-        cameraSource = null
+        if(camSource == CAM_SOURCE_X){
+            cameraSourceX?.close()
+            cameraSourceX = null
+        }
+        else {
+            cameraSource?.close()
+            cameraSource = null
+        }
     }
 
     fun restart()
@@ -104,47 +149,66 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
         close()
 
         viewModel.switchCamera.removeObserver(switchCameraObserver)
+        viewModel.zoom.removeObserver(zoomObserver)
     }
 
     open fun setRecogMode(recogMode: Int) {
         mode = recogMode
-
         viewModel.setShowCameraSwitch(true)
-        /*
-            // back camera only for text and barcode:
-            viewModel.setShowCameraSwitch(
-                when(mode){
-                    RECOG_TEXT, RECOG_BARCODE ->
-                        false
-                    else ->
-                        true
-                }
-            )
-            */
     }
 
     open fun setCameraSource(
         detector: Detector<Any>,
         callback: DetectionTaskCallback<Any>
     ){
-        CameraSourceConfig.Builder(
-            preview.context,
-            detector,
-            callback
-        )
-            .setFacing(cameraFacing)
-            .build()
-            .let { config ->
-                cameraSource = CameraXSource(config, preview)
-            }
+        Log.d(LOGTAG, "setCameraSource()")
+
+        val orientation = preview.context.resources.configuration.orientation
+
+        val size = if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+            Size(650, 400)
+        else
+            Size(400, 650)
+
+        if(camSource == CAM_SOURCE_X){
+            CameraSourceConfigX.Builder(
+                preview.context,
+                detector,
+                callback
+            )
+                .setFacing(cameraFacing)
+                .setRequestedPreviewSize(size.width, size.height)
+                .build()
+                .let { config ->
+                    cameraSourceX = CameraXSourceX(config, preview)
+
+                    // set initial zoom:
+                    preview.post{
+                        applyZoom()
+                    }
+                }
+        }
+        else {
+            CameraSourceConfig.Builder(
+                preview.context,
+                detector,
+                callback
+            )
+                .setFacing(cameraFacing)
+                .setRequestedPreviewSize(size.width, size.height)
+                .build()
+                .let { config ->
+                    cameraSource = CameraXSource(config, preview)
+                }
+        }
     }
 
     open fun getPreviewSize(): Size?
     {
-        if(cameraSource == null)
+        if(cameraSource == null && cameraSourceX == null)
             return null
         else {
-            val size = cameraSource!!.previewSize
+            val size = if(camSource == CAM_SOURCE_X) cameraSourceX!!.previewSize else cameraSource!!.previewSize
             var tsize = size
 
             if(size != null){
@@ -160,5 +224,10 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
 
             return tsize
         }
+    }
+
+    private fun applyZoom()
+    {
+        cameraSourceX?.camera?.cameraControl?.setZoomRatio(zoom)
     }
 }

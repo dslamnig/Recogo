@@ -22,12 +22,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -93,7 +97,22 @@ fun LiveRecogView(
 
                         // recognition graphics:
                         Canvas(
-                            modifier = gestureModifier
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .pointerInput(Unit) {
+                                    detectTransformGestures(
+                                        onGesture = { _, _, gestureZoom, _ ->
+                                            viewModel.setZoom(gestureZoom)
+                                        }
+                                    )
+                                }
+                                .pointerInput(Unit) {
+                                    detectTapGestures(
+                                        onTap = {
+                                            viewModel.setZoom(-1f)
+                                        }
+                                    )
+                                }
                                 .alpha(((sliderPosition) * 2f).coerceAtMost(1f)),
                             onDraw = {
                                 drawRecogState(recogState.value, previewSize, cameraFacing == FRONT_CAMERA)

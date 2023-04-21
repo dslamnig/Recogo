@@ -22,6 +22,7 @@ import android.util.Log
 import android.view.ViewGroup
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
@@ -115,6 +116,9 @@ class LiveActivity : FragmentActivity()
         val previewView = PreviewView(this).apply {
             // preview overlay transformations expect FIT_CENTER:
             scaleType = PreviewView.ScaleType.FIT_CENTER
+
+            // test:
+            //implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

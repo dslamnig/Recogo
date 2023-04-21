@@ -48,8 +48,6 @@ class ImageRecog(viewModel: ImageRecogViewModel) : BaseImageRecog(viewModel = vi
 {
     private val LOGTAG = this.javaClass.simpleName
 
-    private val scope = CoroutineScope(Dispatchers.Default)
-
     override fun setRecogMode(recogMode: Int)
     {
         super.setRecogMode(recogMode)

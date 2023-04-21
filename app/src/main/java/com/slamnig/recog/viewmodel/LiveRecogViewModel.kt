@@ -42,6 +42,9 @@ class LiveRecogViewModel : RecogViewModel()
     private val _showCameraSwitch = MutableLiveData<Boolean>()
     val showCameraSwitch: LiveData<Boolean> = _showCameraSwitch
 
+    private val _zoom = MutableLiveData(1.0f)
+    val zoom: LiveData<Float> = _zoom
+
     fun setPreviewSize(size: Size?)
     {
         size?.let {
@@ -69,6 +72,12 @@ class LiveRecogViewModel : RecogViewModel()
     {
         viewModelScope.launch {
             _showCameraSwitch.value = set
+        }
+    }
+
+    fun setZoom(zoom: Float) {
+        viewModelScope.launch {
+            _zoom.value = zoom
         }
     }
 }
