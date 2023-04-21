@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.slamnig.recog.recog
 
-import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -42,8 +41,9 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
     private val LOGTAG = this.javaClass.simpleName
 
     companion object {
-        const val CAM_SOURCE = 0
-        const val CAM_SOURCE_X = 1
+        const val CAM_SOURCE = 0   // CameraXSource
+        const val CAM_SOURCE_X = 1 // CameraXSourceX
+        // flag that determines whether to use CameraXSource or CameraXSourceX:
         const val camSource = CAM_SOURCE_X
     }
 
@@ -76,6 +76,7 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
             viewModel.switchCamera.observeForever(observer)
         }
 
+        // Zoom works only with CameraXSourceX:
         zoomObserver = Observer<Float>(){ gestureZoom ->
             if(gestureZoom < 0.0f){
                 // animate to min zoom:
@@ -226,6 +227,7 @@ open class BaseLiveRecog(val viewModel: LiveRecogViewModel, val preview: Preview
         }
     }
 
+    // Zoom works only with CameraXSourceX:
     private fun applyZoom()
     {
         cameraSourceX?.camera?.cameraControl?.setZoomRatio(zoom)
